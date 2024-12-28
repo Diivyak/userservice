@@ -4,6 +4,7 @@ import com.scaler.userservice.models.Token;
 import com.scaler.userservice.models.User;
 import com.scaler.userservice.repositories.TokenRepository;
 import com.scaler.userservice.repositories.UserRepository;
+import com.scaler.userservice.util.JwtUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +54,11 @@ public class UserService {
         if(!bCryptPasswordEncoder.matches(password, user.getHashedPassword())){
             return null;
         }
+//        if (isValidUser(user.getName(), user.getHashedPassword())) {
+//            return JwtUtil.generateToken(user.getName());
+//        } else {
+//            throw new RuntimeException("Invalid credentials");
+//        }
 
         Token token = getToken(user);
 
@@ -60,7 +66,7 @@ public class UserService {
 
         Token savedToken = tokenRepository.save(token);
 
-        return null;
+        return savedToken;
     }
     private static Token getToken(User user) {
         LocalDate today = LocalDate.now();
@@ -104,5 +110,10 @@ public class UserService {
         // token, validate using JWT
 
         return tkn.get().getUser();
+    }
+
+    private boolean isValidUser(String username, String password) {
+        // Implement your user validation logic here
+        return "user".equals(username) && "password".equals(password);
     }
 }
