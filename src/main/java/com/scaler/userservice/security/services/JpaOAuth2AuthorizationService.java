@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scaler.userservice.security.models.Authorization;
 import com.scaler.userservice.security.repositories.AuthorizationRepository;
 import org.springframework.dao.DataRetrievalFailureException;
-import com.fasterxml.jackson.databind.Module;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
 import org.springframework.security.oauth2.core.*;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
@@ -27,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import com.fasterxml.jackson.databind.Module;
 
 @Component
 public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService {

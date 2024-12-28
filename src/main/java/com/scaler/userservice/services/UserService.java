@@ -21,44 +21,44 @@ import java.util.Optional;
 @Service
 public class UserService {
     private UserRepository userRepository;
-    private TokenRepository tokenRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private TokenRepository tokenRepository;
+
     public UserService(UserRepository userRepository,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
-                       TokenRepository tokenRepository){
+                       TokenRepository tokenRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.tokenRepository = tokenRepository;
-
     }
+
     public User signUp(String fullName,
                        String email,
                        String password) {
-        User user = new User();
-        user.setName(fullName);
-        user.setEmail(email);
-        user.setHashedPassword(bCryptPasswordEncoder.encode(password));
+        User u = new User();
+        u.setEmail(email);
+        u.setName(fullName);
+        u.setHashedPassword(bCryptPasswordEncoder.encode(password));
 
-        userRepository.save(user);
+        User user = userRepository.save(u);
+
         return user;
     }
 
     public Token login(String email, String password) {
         Optional<User> userOptional = userRepository.findByEmail(email);
-        if(userOptional.isEmpty()){
+
+        if (userOptional.isEmpty()) {
+            // throw user not exists exception
             return null;
         }
 
         User user = userOptional.get();
 
-        if(!bCryptPasswordEncoder.matches(password, user.getHashedPassword())){
+        if (!bCryptPasswordEncoder.matches(password, user.getHashedPassword())) {
+            // throw password not matching exception
             return null;
         }
-//        if (isValidUser(user.getName(), user.getHashedPassword())) {
-//            return JwtUtil.generateToken(user.getName());
-//        } else {
-//            throw new RuntimeException("Invalid credentials");
-//        }
 
         Token token = getToken(user);
 
@@ -68,6 +68,7 @@ public class UserService {
 
         return savedToken;
     }
+
     private static Token getToken(User user) {
         LocalDate today = LocalDate.now();
         LocalDate thirtyDaysLater = today.plus(30, ChronoUnit.DAYS);
@@ -79,9 +80,9 @@ public class UserService {
         token.setUser(user);
         token.setExpiryAt(expiryDate);
         token.setValue(RandomStringUtils.randomAlphanumeric(128));
-
         return token;
     }
+
     public void logout(String token) {
         Optional<Token> token1 = tokenRepository.findByValueAndDeletedEquals(token, false);
 
@@ -96,6 +97,7 @@ public class UserService {
         tokenRepository.save(tkn);
 
         return;
+
     }
 
     public User validateToken(String token) {
@@ -110,10 +112,5 @@ public class UserService {
         // token, validate using JWT
 
         return tkn.get().getUser();
-    }
-
-    private boolean isValidUser(String username, String password) {
-        // Implement your user validation logic here
-        return "user".equals(username) && "password".equals(password);
     }
 }

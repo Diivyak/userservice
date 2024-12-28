@@ -3,7 +3,6 @@ package com.scaler.userservice.security.models;
 import jakarta.persistence.*;
 
 import java.time.Instant;
-
 @Entity
 @Table(name = "`authorization`")
 public class Authorization {
@@ -353,5 +352,4 @@ public class Authorization {
     public void setDeviceCodeMetadata(String deviceCodeMetadata) {
         this.deviceCodeMetadata = deviceCodeMetadata;
     }
-
 }
