@@ -25,6 +25,11 @@ public class UserController {
 
         return userService.login(request.getEmail(), request.getPassword());
     }
+    @GetMapping("/say/{name}")
+    public String sayHello(@PathVariable("name") String name) {
+        String answer = "";
+        return answer += "Hello " + name;
+    }
 
     @PostMapping("/signup")
     public UserDto signUp(@RequestBody  SignUpRequestDto request){
