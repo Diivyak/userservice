@@ -45,8 +45,8 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -61,6 +61,7 @@ public class SecurityConfig {
         http
                 // Redirect to the login page when not authenticated from the
                 // authorization endpoint
+//                .securityMatcher(new AntPathRequestMatcher("/oauth2/**"))
                 .exceptionHandling((exceptions) -> exceptions
                         .defaultAuthenticationEntryPointFor(
                                 new LoginUrlAuthenticationEntryPoint("/login"),
@@ -79,6 +80,7 @@ public class SecurityConfig {
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
             throws Exception {
         http
+                .securityMatcher("/oauth2/**")
                 .authorizeHttpRequests((authorize) -> authorize
                         .anyRequest().permitAll()
                 )
